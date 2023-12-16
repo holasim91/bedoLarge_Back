@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 const { pool } = require("../model");
 
+const testData = [];
 
-
-const selectUser = async (req: Request, res: Response) => {
-    const _query = 'SELECT * FROM bedoLarge.users '
+const addSubs = async (req: Request, res: Response) => {
+    const param = req.params
+    const _query = 'INSERT INTO bedoLarge.subs VALUES (?,?,?)'
     const connection = await pool.getConnection();
     try {
         const [rows] = await connection.query(_query);
-        const removeTestData = rows.filter((r: { id: string; }) => r.id !=='testtest')
-        res.send(removeTestData)
+        res.send(rows)
     } catch (error) {
         console.error(error)
     } finally {
@@ -22,5 +22,4 @@ const selectUser = async (req: Request, res: Response) => {
 
 
 
-
-export default selectUser;
+export default addSubs;
