@@ -6,7 +6,7 @@ const schedule = require('node-schedule');
 const { google } = require('googleapis');
 import dotenv from 'dotenv'
 
-import { getSubsInfo } from './api/external';
+import { getSubsInfoFromYoutube } from './api/external';
 
 dotenv.config()
 
@@ -30,7 +30,7 @@ schedule.scheduleJob('55 23 * * *', async function () { // sec(option) min hour 
         const channelIds = response.data.map((r: { id: string; }) => r.id)
         console.log(channelIds)
         if (channelIds.length > 0) {
-            const aaa = await getSubsInfo(channelIds)
+            const aaa = await getSubsInfoFromYoutube(channelIds)
             console.log(aaa, '?')
             if (aaa) {
                 axios.post(postURL, aaa)

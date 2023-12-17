@@ -1,10 +1,11 @@
 import express, { Router } from "express";
-import {addSubs, getSub} from "../api/subs";
+import {addSubs, getSubs, getSub} from "../api/subs";
 
 
 const router: Router = express.Router();
 
-router.get('/', getSub);
+router.get('/', getSubs);
+router.get('/:id', getSub);
 router.post('/add_sub_info', addSubs);
 
 
