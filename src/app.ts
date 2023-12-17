@@ -3,7 +3,6 @@ import express from 'express';
 import apiRoute from './router/index';
 import axios from 'axios';
 const schedule = require('node-schedule');
-const { google } = require('googleapis');
 import dotenv from 'dotenv'
 
 import { getSubsInfoFromYoutube } from './api/external';
@@ -17,19 +16,24 @@ require('dotenv').config();
 app.use(express.json());
 app.use('/api', apiRoute);
 
-const testBatchTime = '10 * * * *'
-const batchTime = "55 23 * * *"
-schedule.scheduleJob(testBatchTime, async function () { // sec(option) min hour day month 요일
+const testBatchTime = '10 * * * * *'
+const batchTime = "0 55 23 * * *"
+schedule.scheduleJob(testBatchTime, async () => { // sec(option) min hour day month 요일
     console.log('TIME TO GET SUBSCRIBER INFO OF BEDORAZI')
+    const targetURL = 'http://localhost:3001/api/user'
+    const postURL = 'http://localhost:3001/api/subs/add_sub_info'
     try {
-        const response = await axios.get('/api/user')
+        const response = await axios.get(targetURL)
+        console.log(response,'?')
         const channelIds = response.data.map((r: { id: string; }) => r.id)
         console.log(channelIds)
         if (channelIds.length > 0) {
             const aaa = await getSubsInfoFromYoutube(channelIds)
             console.log(aaa, '?')
             if (aaa) {
-                axios.post('/api/subs/add_sub_info', aaa)
+                axios.post(postURL, aaa)
+            }else{
+                throw Error
             }
         }
     } catch (e) {
@@ -37,6 +41,7 @@ schedule.scheduleJob(testBatchTime, async function () { // sec(option) min hour 
     }
 
 });
+
 
 app.set("port", process.env.PORT || 5001);
 app.listen(app.get("port"), () => {
