@@ -17,11 +17,10 @@ require('dotenv').config();
 app.use(express.json());
 app.use('/api', apiRoute);
 
-
-schedule.scheduleJob('55 23 * * *', async function () { // sec(option) min hour day month 요일
+const testBatchTime = '10 * * * *'
+const batchTime = "55 23 * * *"
+schedule.scheduleJob(testBatchTime, async function () { // sec(option) min hour day month 요일
     console.log('TIME TO GET SUBSCRIBER INFO OF BEDORAZI')
-    const targetURL = 'http://localhost:3001/api/user'
-    const postURL = 'http://localhost:3001/api/subs/add_sub_info'
     try {
         const response = await axios.get('/api/user')
         const channelIds = response.data.map((r: { id: string; }) => r.id)
